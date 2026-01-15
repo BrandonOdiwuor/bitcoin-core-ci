@@ -100,7 +100,7 @@ jobs:
             config: build-gui
           - system: x86_64-linux
             runner_label: ubuntu-latest
-            cmake_flags: -DBUILD_GUI=ON -DBUILD_BENCH=ON
+            cmake_flags: -DBUILD_GUI=ON\;-DBUILD_BENCH=ON
             ctest_extra: ""
             config: build-gui+bench
           - system: aarch64-linux
@@ -114,6 +114,7 @@ jobs:
       - name: Checkout Nightly Repo
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.head_ref }}
           fetch-depth: 1
       - name: Checkout Bix Repo
         uses: actions/checkout@v4
@@ -127,7 +128,7 @@ jobs:
           repository: brandonodiwuor/bitcoin
           path: 'bitcoin'
           ref: 'will-repo-changes'
-          fetch-depth: 1
+          fetch-depth: 0
       - name: Get Bitcoin commit hash
         id: bitcoin-commit
         run: |
@@ -167,7 +168,7 @@ jobs:
                 -DBUILD_NAME_SUFFIX=${{ matrix.config }}--${{ inputs.ctest_build_name_suffix }} \
                 ${{ matrix.ctest_extra }} \
                 -DTREAT_WARNINGS_AS_ERRORS=ON \
-                -DCMAKE_ARGS='${{ matrix.cmake_flags }}' \
+                -DCMAKE_ARGS=${{ matrix.cmake_flags }} \
                 -DMODEL=${{ inputs.ctest_model }}
             "
   notify-failure:
