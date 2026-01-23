@@ -100,7 +100,7 @@ jobs:
             config: build-gui
           - system: x86_64-linux
             runner_label: ubuntu-latest
-            cmake_flags: -DBUILD_GUI=ON -DBUILD_BENCH=ON
+            cmake_flags: -DBUILD_GUI=ON\;-DBUILD_BENCH=ON
             ctest_extra: ""
             config: build-gui+bench
           - system: aarch64-linux
@@ -114,6 +114,7 @@ jobs:
       - name: Checkout Nightly Repo
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.head_ref }}
           fetch-depth: 1
       - name: Checkout Bix Repo
         uses: actions/checkout@v4
@@ -167,7 +168,7 @@ jobs:
                 -DBUILD_NAME_SUFFIX=${{ matrix.config }}--${{ inputs.ctest_build_name_suffix }} \
                 ${{ matrix.ctest_extra }} \
                 -DTREAT_WARNINGS_AS_ERRORS=ON \
-                -DCMAKE_ARGS='${{ matrix.cmake_flags }}' \
+                -DCMAKE_ARGS=${{ matrix.cmake_flags }} \
                 -DMODEL=${{ inputs.ctest_model }}
             "
   notify-failure:
@@ -194,8 +195,8 @@ jobs:
             **This Repo Commit:** ${{ github.sha }}
             **Branch:** ${{ github.ref_name }}
             **Triggered by:** ${{ github.event_name }}
-            **Bitcoin Commit:** [\`${BITCOIN_COMMIT_SHORT}\`](https://github.com/bitcoin/bitcoin/commit/${BITCOIN_COMMIT})
-            cc: @willcl-ark @fanquake" \
+            **Bitcoin Commit:** [\`${BITCOIN_COMMIT_SHORT}\`](https://github.com/BrandonOdiwuor/bitcoin/commit/${BITCOIN_COMMIT})
+            cc: @brandonodiwuor" \
             --repo ${{ github.repository }}
         env:
           GH_TOKEN: ${{ github.token }}
